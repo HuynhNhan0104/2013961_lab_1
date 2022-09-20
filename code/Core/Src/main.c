@@ -86,12 +86,18 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  int red_time = 2;
-  int yellow_time = 2;
-  int red_counter = red_time;
-  int yellow_counter = yellow_time;
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_RESET);
+  int red_time = 5;
+    int yellow_time = 2;
+    int green_time = 3;
+    int red_counter = red_time;
+    int yellow_counter = yellow_time;
+    int green_counter = green_time;
+    enum State{RED , YELLOW , GREEN, NONE} ;
+
+    enum State state_traffic = NONE;
+    HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 
@@ -99,17 +105,44 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  switch(state_traffic){
+
+	  case RED:
+		  red_counter--;
+		  if(red_counter == 0){
+			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin,GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_RESET);
+			  red_counter = red_time;
+			  state_traffic = GREEN;
+		  }
+		  break;
+
+	  case YELLOW:
+		  yellow_counter--;
+		  if(yellow_counter == 0){
+			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin,GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin,GPIO_PIN_RESET);
+			  yellow_counter = yellow_time;
+			  state_traffic = RED;
+		  }
+		  break;
+
+	  case GREEN:
+		  green_counter--;
+		  if(green_counter == 0){
+			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin,GPIO_PIN_RESET);
+			  green_counter = green_time;
+			  state_traffic = YELLOW;
+		  }
+		  break;
+	  case NONE:
+		  state_traffic = RED;
+		  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin,GPIO_PIN_RESET);
+		  break;
+	  }
     /* USER CODE END WHILE */
-	red_counter--;
-	if(red_counter == 0){
-		red_counter = red_time;
-		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	}
-	yellow_counter--;
-	if(yellow_counter == 0){
-		yellow_counter = yellow_time;
-		HAL_GPIO_TogglePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin);
-	}
+
     /* USER CODE BEGIN 3 */
 	HAL_Delay(1000);
   }
@@ -164,10 +197,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin|LED_GREEN_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin;
+  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin LED_GREEN_Pin */
+  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin|LED_GREEN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
