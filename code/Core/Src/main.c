@@ -88,11 +88,15 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  // cycle la bien chu ki cua de kim giay tien len 1
 	int cycle = 1;
+	// bien dem cho kim giay, kim phut, kim gio
 	int second = 0;
 	int minute = 0;
 	int hour = 0;
 	int counter  = cycle;
+
+	// trang thai ban dau cua he thong
 
 	HAL_GPIO_WritePin(LED_0_GPIO_Port, LED_0_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_SET);
@@ -112,16 +116,28 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  //cu sau cycle thi kim giay se thay doi tu vi tri i - 1 den vi tri i
+	  // de lam nhu vay thi se phai tat den o vi tri i - 1 neu khong co bong den hien thi cua kim phut va kim gio
+	  // sau do ta se bat bong den tai vi tri i
 
+
+	 // thuc hien tat bong den o vi tri i - 1
 	  switch(second){
+	  	  // xet truong hop tai bien khi kim giay o vi tri 0
 	 	  case 0:
+	 		  //neu truoc do bong den o vi tri i - 1 ko duoc bat boi kim phut va kim giay thi ta se tat bong den o vi tri i - 1
 	 		  if(minute != 11 && hour != 11) clearNumberOnClock(11);
 	 		  break;
+	 	// xet truong hop tai bien khi kim giay o vi tri 0
 	 	  default:
 	 		  if(second - minute != 1 && second - hour != 1) clearNumberOnClock(second-1);
 	 		  break;
 	 	  }
 	 	  setNumberOnClock(second);
+
+
+
+
 	 	  switch(minute){
 	 	  	  case 0:
 	 	  		  if(second != 11 && hour != 11) clearNumberOnClock(11);
@@ -141,16 +157,23 @@ int main(void)
 	 	 }
 	 	 setNumberOnClock(hour);
 
+	 	 // giam bien dem counter
 	 	 counter--;
+	 	 // bien dem = 0 co nghia la kim giay se tang 1 bac tu vi tri i sang i + 1
 	 	  if(counter == 0){
+	 		  //reset lai bien dem = cycle
 	 		  counter = cycle;
 	 		  second++;
+	 		  //kim giay o vi tri 11 se tro lai vi tri 0 dong thoi tang kim phut len 1
 	 		  if(second >= 12) {
+
 	 			 second = 0;
 	 			 minute++;
+	 			 //tuong tu kim phut o vi tri 11 se tro lai vi tri 0 va tang kim gio len 1
 	 			 if(minute >= 12){
 	 				 minute = 0;
 	 				 hour++;
+	 				 // kim gio o vi tri 11 se tro lai vi tri 0
 					  if(hour >= 12){
 						  hour = 0;
 					  }
