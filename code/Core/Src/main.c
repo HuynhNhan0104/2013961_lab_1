@@ -86,15 +86,18 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  int red_time = 5;
+  // thoi gian sang cua den do, vang, xanh
+  	int red_time = 5;
     int yellow_time = 2;
     int green_time = 3;
+  //bien dem thoi gian cua den do, den vang va den xanh
     int red_counter = red_time;
     int yellow_counter = yellow_time;
     int green_counter = green_time;
+  // tao bien enum bieu hien cho 4 trang thai do, vang, xanh va None(trang thai khi he thong vua bat dau)
     enum State{RED , YELLOW , GREEN, NONE} ;
-
     enum State state_traffic = NONE;
+  // ban dau cho ca 3 den deu tat
     HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
@@ -105,14 +108,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  // ta co mot may trang thai tuong ung voi do, vang, xanh va none
 	  switch(state_traffic){
 
 	  case RED:
 		  red_counter--;
 		  if(red_counter == 0){
+			  //tat den do va bat den xanh
 			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin,GPIO_PIN_SET);
 			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_RESET);
 			  red_counter = red_time;
+			  //chuyen sang trang thai den xanh
 			  state_traffic = GREEN;
 		  }
 		  break;
@@ -120,9 +126,11 @@ int main(void)
 	  case YELLOW:
 		  yellow_counter--;
 		  if(yellow_counter == 0){
+			  //tat den vang va bat den do
 			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin,GPIO_PIN_SET);
 			  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin,GPIO_PIN_RESET);
 			  yellow_counter = yellow_time;
+			  // chuyen sang trang thai do
 			  state_traffic = RED;
 		  }
 		  break;
@@ -130,13 +138,16 @@ int main(void)
 	  case GREEN:
 		  green_counter--;
 		  if(green_counter == 0){
+			  //tat den xanh bat den vang
 			  HAL_GPIO_WritePin(LED_GREEN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_SET);
 			  HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin,GPIO_PIN_RESET);
 			  green_counter = green_time;
+			  // chuyen sang trang thai vang
 			  state_traffic = YELLOW;
 		  }
 		  break;
 	  case NONE:
+		  //khi bat dau ta se chuyen sang trang thai do va bat den do
 		  state_traffic = RED;
 		  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin,GPIO_PIN_RESET);
 		  break;
