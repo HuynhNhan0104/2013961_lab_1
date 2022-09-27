@@ -87,15 +87,20 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  // thoi gian sang cua den do, vang xanh
 	int red_time = 5;
 	int yellow_time = 2;
 	int green_time = 3;
+	// bien dem thoi gian sang cua den do, vang, xanh cua he thong den 1
 	int red_1_counter = red_time;
 	int yellow_1_counter = yellow_time;
 	int green_1_counter = green_time;
+	// bien dem thoi gian sang cua den do, vang, xanh cua he thong den 1
 	int red_2_counter = red_time;
 	int yellow_2_counter = yellow_time;
 	int green_2_counter = green_time;
+	// tao bien the hien cac trang thai cua 1 he thong den giao thong
+	// cac trang thai la do, vang, xanh va none la trang thai ban dau
 	enum State{RED, YELLOW , GREEN,NONE} ;
 	enum State state_traffic_1 = NONE;
 	enum State state_traffic_2 = NONE;
@@ -103,6 +108,7 @@ int main(void)
 	 HAL_GPIO_WritePin(LED_RED_1_GPIO_Port, LED_RED_1_Pin, GPIO_PIN_SET);
 	 HAL_GPIO_WritePin(LED_YELLOW_1_GPIO_Port, LED_YELLOW_1_Pin, GPIO_PIN_SET);
 	 HAL_GPIO_WritePin(LED_GREEN_1_GPIO_Port, LED_GREEN_1_Pin, GPIO_PIN_SET);
+
 	 HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin, GPIO_PIN_SET);
 	 HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin, GPIO_PIN_SET);
 	 HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port, LED_GREEN_2_Pin, GPIO_PIN_SET);
@@ -112,84 +118,98 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  //chuyen doi trang thai cua he thong den 1
 	    switch(state_traffic_1){
 
 		  case RED:
-			  display7SEG_1(red_1_counter);
-			  red_1_counter--;
 			  if(red_1_counter == 0){
+				  //chuyen sang trang thai den xanh
+				  //tat den do , bat den xanh
 				  HAL_GPIO_WritePin(LED_RED_1_GPIO_Port, LED_RED_1_Pin,GPIO_PIN_SET);
 				  HAL_GPIO_WritePin(LED_GREEN_1_GPIO_Port,LED_GREEN_1_Pin,GPIO_PIN_RESET);
+				  //reset lai bien dem
 				  red_1_counter = red_time;
+				  // chuyen trang thai he thong sang den xanh
 				  state_traffic_1 = GREEN;
 			  }
+			  //hien thi thoi gian luc he thong den dang o luc den do
+			  display7SEG_1(red_1_counter);
+			  red_1_counter--;
 			  break;
 
 		  case YELLOW:
-			  display7SEG_1(yellow_1_counter);
-			  yellow_1_counter--;
 			  if(yellow_1_counter == 0){
+				  //chuyen sang trang thai den do
+				  //tat den vang, bat den do
 				  HAL_GPIO_WritePin(LED_YELLOW_1_GPIO_Port, LED_YELLOW_1_Pin,GPIO_PIN_SET);
 				  HAL_GPIO_WritePin(LED_RED_1_GPIO_Port, LED_RED_1_Pin,GPIO_PIN_RESET);
 				  yellow_1_counter = yellow_time;
 				  state_traffic_1 = RED;
 			  }
+			  //hien thi thoi gian luc he thong den dang o luc den vang
+			  display7SEG_1(yellow_1_counter);
+			  yellow_1_counter--;
 			  break;
 
 		  case GREEN:
-			  display7SEG_1(green_1_counter);
-			  green_1_counter--;
 			  if(green_1_counter == 0){
+				  //chuyen sang trang thai den vang
+				  //tat den xanh, bat den vang
 				  HAL_GPIO_WritePin(LED_GREEN_1_GPIO_Port,LED_GREEN_1_Pin,GPIO_PIN_SET);
 				  HAL_GPIO_WritePin(LED_YELLOW_1_GPIO_Port, LED_YELLOW_1_Pin,GPIO_PIN_RESET);
 				  green_1_counter = green_time;
 				  state_traffic_1 = YELLOW;
 			  }
+			  //hien thi thoi gian luc he thong den dang o luc den xanh
+			  display7SEG_1(green_1_counter);
+			  green_1_counter--;
 			  break;
 		  case NONE:
+			  //trang thai khi he thong vua khoi dong
 			  state_traffic_1 = RED;
 			  HAL_GPIO_WritePin(LED_RED_1_GPIO_Port, LED_RED_1_Pin,GPIO_PIN_RESET);
 			  break;
 		  }
- switch(state_traffic_2){
+	 // hoat dong tuong tu he thong den giao thong 1
+	 switch(state_traffic_2){
 
-		  case RED:
-			  display7SEG_2(red_2_counter);
-			  red_2_counter--;
-			  if(red_2_counter == 0){
-				  HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin,GPIO_PIN_SET);
-				  HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port,LED_GREEN_2_Pin,GPIO_PIN_RESET);
-				  red_2_counter = red_time;
+			  case RED:
+				  if(red_2_counter == 0){
+					  HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin,GPIO_PIN_SET);
+					  HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port,LED_GREEN_2_Pin,GPIO_PIN_RESET);
+					  red_2_counter = red_time;
+					  state_traffic_2 = GREEN;
+				  }
+				  display7SEG_2(red_2_counter);
+				  red_2_counter--;
+				  break;
+
+			  case YELLOW:
+				  if(yellow_2_counter == 0){
+					  HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin,GPIO_PIN_SET);
+					  HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin,GPIO_PIN_RESET);
+					  yellow_2_counter = yellow_time;
+					  state_traffic_2 = RED;
+				  }
+				  display7SEG_2(yellow_2_counter);
+				  yellow_2_counter--;
+				  break;
+
+			  case GREEN:
+				  if(green_2_counter == 0){
+					  HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port,LED_GREEN_2_Pin,GPIO_PIN_SET);
+					  HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin,GPIO_PIN_RESET);
+					  green_2_counter = green_time;
+					  state_traffic_2 = YELLOW;
+				  }
+				  display7SEG_2(green_2_counter);
+				  green_2_counter--;
+				  break;
+			  case NONE:
 				  state_traffic_2 = GREEN;
+				  HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port, LED_GREEN_2_Pin,GPIO_PIN_RESET);
+				  break;
 			  }
-			  break;
-
-		  case YELLOW:
-			  display7SEG_2(yellow_2_counter);
-			  yellow_2_counter--;
-			  if(yellow_2_counter == 0){
-				  HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin,GPIO_PIN_SET);
-				  HAL_GPIO_WritePin(LED_RED_2_GPIO_Port, LED_RED_2_Pin,GPIO_PIN_RESET);
-				  yellow_2_counter = yellow_time;
-				  state_traffic_2 = RED;
-			  }
-			  break;
-
-		  case GREEN:
-			  display7SEG_2(green_2_counter);
-			  green_2_counter--;
-			  if(green_2_counter == 0){
-				  HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port,LED_GREEN_2_Pin,GPIO_PIN_SET);
-				  HAL_GPIO_WritePin(LED_YELLOW_2_GPIO_Port, LED_YELLOW_2_Pin,GPIO_PIN_RESET);
-				  green_2_counter = green_time;
-				  state_traffic_2 = YELLOW;
-			  }
-			  break;
-		  case NONE:
-			  state_traffic_2 = GREEN;
-			  HAL_GPIO_WritePin(LED_GREEN_2_GPIO_Port, LED_GREEN_2_Pin,GPIO_PIN_RESET);
-			  break;
-		  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
