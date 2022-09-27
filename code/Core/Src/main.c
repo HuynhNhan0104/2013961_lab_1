@@ -86,10 +86,15 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  // thoi gian sang cua den vang va den do
   int red_time = 2;
   int yellow_time = 2;
+  // bien dem thoi gian cua den vang va den do
   int red_counter = red_time;
   int yellow_counter = yellow_time;
+
+  // khoi tao trang thai ban dau
+  // den do tat = set va den vang bat = reset
   HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_RESET);
 
@@ -99,17 +104,19 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+	//dem cho den khi counter moi den bang 0 thi ta se doi trang thai cua chung
 	red_counter--;
 	if(red_counter == 0){
 		red_counter = red_time;
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	}
+	// tuong tu cho den vang
 	yellow_counter--;
 	if(yellow_counter == 0){
 		yellow_counter = yellow_time;
 		HAL_GPIO_TogglePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin);
 	}
+    /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
 	HAL_Delay(1000);
   }
